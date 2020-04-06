@@ -2,7 +2,7 @@ name: build dataset
 description: Continuously builds covid-self-report datasets
 runs:
     using: node12
-    main: index.js
+    main: dist/index.js
 inputs:
     daily_export_json_url:
         description: URL to reach daily changes
