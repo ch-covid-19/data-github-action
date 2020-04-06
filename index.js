@@ -111,6 +111,14 @@ try {
   console.log('Starting daily aggregation at [' + new Date().toTimeString() + '] for [' + daystamp + ']');
 
   (async () => {
+
+
+    fs.readdir('.', (err, files) => {
+      files.forEach(file => {
+        console.log(file);
+      });
+    });
+
     const currentDailyChangesResponse = await httpClient.get(exportUrl + `?token=${exportToken}&date=${daystamp}`);
     const currentDailyChanges = JSON.parse(await currentDailyChangesResponse.readBody());
 
