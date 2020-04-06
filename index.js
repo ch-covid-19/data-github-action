@@ -112,7 +112,7 @@ try {
 
   (async () => {
 
-    console.log('listing files');
+    console.log('listing files in dir');
     fs.readdir('.', (err, files) => {
       files.forEach(file => {
         console.log('File: ' + file);
