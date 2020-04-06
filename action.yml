@@ -1,0 +1,24 @@
+name: build dataset
+description: Continuously builds covid-self-report datasets
+runs:
+    using: node12
+    main: index.js
+inputs:
+    daily_export_json_url:
+        description: URL to reach daily changes
+        required: true
+    daily_export_json_token:
+        description: security token
+        required: true
+    merged_dataset_name:
+        description: merged dataset name
+        default: merge-all-days.csv
+        required: true
+    daily_report_name:
+        description: name of daily report where {date} will be replaced with YEAR-MONTH-DAY
+        default: 'daily-reports/{date}.csv'
+        required: true
+    daily_merged_report_name:
+        description: name of daily merged report where {date} will be replaced with YEAR-MONTH-DAY
+        default: 'daily-aggregated/{date}.csv'
+        required: true
