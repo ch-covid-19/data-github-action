@@ -112,13 +112,6 @@ try {
 
   (async () => {
 
-    console.log('listing files in dir');
-    fs.readdir('.', (err, files) => {
-      files.forEach(file => {
-        console.log('File: ' + file);
-      });
-    });
-
     const currentDailyChangesResponse = await httpClient.get(exportUrl + `?token=${exportToken}&date=${daystamp}`);
     const currentDailyChanges = JSON.parse(await currentDailyChangesResponse.readBody());
 
