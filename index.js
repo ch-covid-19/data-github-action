@@ -21,7 +21,8 @@ const emptyDiagnosticRow = Array.from(Array(numberOfDiagnostics).keys()).map(() 
 
 
 const httpClient = new HttpClient();
-const daystamp = getDayStamp(new Date());
+const now = new Date();
+const daystamp = getDayStamp(now);
 const yesterday = (d => new Date(d.setDate(d.getDate()-1)))(new Date);
 const yestedaystamp = getDayStamp(yesterday);
 const exportUrl = core.getInput('daily_export_json_url');
@@ -183,6 +184,8 @@ try {
     console.log('Building merged daily changes file...');
     await buildDailyMergedChanges();
 
+    // Update last-update
+    fs.writeFileSync('./last-update.txt', `${now.toLocaleDateString()} ${now.toLocaleTimeString()}`, 'utf-8');
     console.log('Done');
   })();
 } catch (e) {
