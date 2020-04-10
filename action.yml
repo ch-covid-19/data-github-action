@@ -23,7 +23,7 @@ inputs:
         required: true
     daily_merged_report_name:
         description: name of daily merged report where {date} will be replaced with YEAR-MONTH-DAY
-        default: 'daily-report/{date}.csv'
+        default: 'daily-reports/{date}.csv'
         required: true
     csv_separator:
         description: CSV column separator
