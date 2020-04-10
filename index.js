@@ -150,7 +150,6 @@ try {
     const buildDailyMergedChanges = async () => {
       const yesterdayChanges = loadCSVFile(`./${dailyMergedReportName.replace('{date}', getDayStamp(yesterday))}`);
       const todayChanges = yesterdayChanges.map(it => yesterdayChanges.indexOf(it) === 0 ? it : [daystamp, ...it.slice(1)]);
-
       const updatedChanges = dailyChangesUpdateDataset(currentDailyChanges, todayChanges, (it, daystamp, locator) => it[1] === locator, (a, b) => a + b);
       const filecontent = toCsv(updatedChanges);
       fs.writeFileSync(`./${dailyMergedReportName.replace('{date}', daystamp)}`, filecontent, 'utf-8'); // write daily report
