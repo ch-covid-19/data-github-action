@@ -7,6 +7,9 @@ inputs:
     daily_export_json_url:
         description: URL to reach daily changes
         required: true
+    geo_locations_csv_url:
+        description: URL to the geolocation CSV file for your country
+        required: true
     daily_export_json_token:
         description: security token
         required: true
@@ -16,9 +19,17 @@ inputs:
         required: true
     daily_report_name:
         description: name of daily report where {date} will be replaced with YEAR-MONTH-DAY
-        default: 'daily-reports/{date}.csv'
+        default: 'daily-variation/{date}.csv'
         required: true
     daily_merged_report_name:
         description: name of daily merged report where {date} will be replaced with YEAR-MONTH-DAY
-        default: 'daily-aggregated/{date}.csv'
+        default: 'daily-report/{date}.csv'
         required: true
+    csv_separator:
+        description: CSV column separator
+        required: true
+        default: ','
+    today_filename:
+        description: name of the today file (always the same) up to date with latest daily report
+        required: true
+        default: 'today.csv'
