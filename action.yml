@@ -19,7 +19,7 @@ inputs:
         required: true
     daily_report_name:
         description: name of daily report where {date} will be replaced with YEAR-MONTH-DAY
-        default: 'daily-variation/{date}.csv'
+        default: 'daily-changes/{date}.csv'
         required: true
     daily_merged_report_name:
         description: name of daily merged report where {date} will be replaced with YEAR-MONTH-DAY

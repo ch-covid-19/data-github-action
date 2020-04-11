@@ -2,17 +2,20 @@
 ## Github action to generate datasets
 
 This github action can automatically generate datasets based on collected data. It will generate 3 kinds of files:
-- globally merged data which takes all daily changes (daily variations) and appends them in a single CSV file. Tracks all variations since the beginning
+- globally merged data which takes all daily changes (daily variations) and appends them in a single CSV file. Tracks all variations since the beginning, also known as `merge-all-days.csv`
+- Daily changes from the start, tracks all variations and merge them with previous data, same as daily changes but aggregated across time, one CSV file per day, also known as `daily-reports`
 - Daily changes, tracks all variations and write them to CSV files one per day
-- Aggregated daily changes, tracks all variations and merge them with previous data, same as daily changes but aggregated across time, one CSV file per day
 
 ### Action configuration
 This action can be configured with the following variables:
 - `daily_export_json_url` **required** which is your firebase daily json exporting function URL
-- `daily_export_json_token` **required** the security token to access the json export function
-- `merged_dataset_name` the name of the globally merged dataset file
-- `daily_report_name` the name of the daily reports, by default is `daily-reports/{date}.csv` where `date` is replaced by YEAR-MONTH-DAY. This means you'll have one file per day in a daily-reports directory
-- `daily_merged_report_name` the name of the aggregated daily reports, by default `daily-aggregated/{date}.csv` where `date` is replaced by YEAR-MONTH-DAY. This means you'll have one file per day in a daily-aggregated directory
+- `geo_locations_csv_url` ** required** which is the URL to the geolocation file for your instance (github raw)
+- `daily_export_json_token` **required** the security token to access the json export function, **AS SECRET**
+- `merged_dataset_name` the name of the globally merged dataset file, by default `merge-all-days.csv`
+- `daily_report_name` the name of the daily reports, by default is `daily-changes/{date}.csv` where `date` is replaced by YEAR-MONTH-DAY. This means you'll have one file per day in a daily-reports directory
+- `daily_merged_report_name` the name of the aggregated daily reports, by default `daily-reports/{date}.csv` where `date` is replaced by YEAR-MONTH-DAY. This means you'll have one file per day in a daily-aggregated directory
+- `csv_separator`, by default `,`
+- `today_filename` filename of the today file (to have a unique route to latest data)
 
 ### Using this action
 1. You should have a repository dedicated for your datasets.
@@ -35,7 +38,8 @@ jobs:
               uses: ch-covid-19/data-github-action@master
               with:
                   daily_export_json_url: #...
-                  daily_export_json_token: #...
+                  geo_locations_csv_url: #...
+                  daily_export_json_token: ${{ secrets.readToken }}
                   # Put other variables value here if you want
             - name: Commit changes
               run: |
@@ -50,7 +54,14 @@ jobs:
 ```
 
 4. In order for the action to work properly, your project structure MUST match what you've defined in the action configuration variables. For example, if you use default values for `daily_report_name` and `daily_merged_report_name`,
-the action will try to write in `daily-reports` and `daily-aggregated` directories, if those don't exist the action will crash. To take care of this, you can create those directories and add a `.gitkeep` file in both of them, this will make sure they
+the action will try to write in `daily-reports` and `daily-changes` directories, if those don't exist the action will crash. To take care of this, you can create those directories and add a `.gitkeep` file in both of them, this will make sure they
 exist on github.
 
 5. Push to your dataset repository and go to Actions tab to see it working!
+
+### Managing secrets
+Github secrets are a way to provide secret data to your actions without writing them directly in your workflow yml file (and thus making it available for everyone). Instead you can use the ``${{ secrets.mySecret }}` template code to dynamically provide them.
+To create a secret:
+- go to your datasets repository settings (where the action will work)
+- On the left menu go to secrets
+- From there you can add and manage secrets, you can then easily add a readToken secret
