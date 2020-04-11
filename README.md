@@ -22,7 +22,6 @@ This action can be configured with the following variables:
 2. In your project, create a new `.github/workflows/main.yml` file
 3. Put the following content in it
 ```yml
-
 on:
     schedule:
         - cron: '0 * * * *' # runs the aggregation every hour
@@ -60,7 +59,7 @@ exist on github.
 5. Push to your dataset repository and go to Actions tab to see it working!
 
 ### Managing secrets
-Github secrets are a way to provide secret data to your actions without writing them directly in your workflow yml file (and thus making it available for everyone). Instead you can use the ``${{ secrets.mySecret }}` template code to dynamically provide them.
+Github secrets are a way to provide secret data to your actions without writing them directly in your workflow yml file (and thus making it available for everyone). Instead you can use the `${{ secrets.mySecret }}` template code to dynamically provide them.
 To create a secret:
 - go to your datasets repository settings (where the action will work)
 - On the left menu go to secrets
