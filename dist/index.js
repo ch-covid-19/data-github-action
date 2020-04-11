@@ -162,7 +162,7 @@ const now = new Date();
 const daystamp = getDayStamp(now);
 const yesterday = (d => new Date(d.setDate(d.getDate()-1)))(new Date);
 const yestedaystamp = getDayStamp(yesterday);
-const unknownNpasFilename = './unknown-geocoding.csv';
+const unknownNpasFilename = './unknown-geocoding.txt';
 
 
 const exportUrl = core.getInput('daily_export_json_url');
@@ -206,7 +206,7 @@ try {
     const currentDailyChangesResponse = await httpClient.get(exportUrl + `?token=${exportToken}&date=${daystamp}`);
     const currentDailyChanges = JSON.parse(await currentDailyChangesResponse.readBody());
     const geocoding = await getGeocoding();
-    const unknownNpas = loadCSVFile(unknownNpasFilename);
+    const unknownNpas = fs.existsSync(unknownNpasFilename) ? fs.readFileSync(unknownNpasFilename, 'utf-8') : '';
 
     const getLatLong = (locator) => {
       const item = geocoding.find((it) => it[0] === locator);
