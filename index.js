@@ -9,6 +9,8 @@ const numberOfMetadataRows = 4;
 const csvHeader = [
   'date',
   'postal_code',
+  'latitude',
+  'longitude',
   'healthy',
   'sick_guess_no_corona',
   'sick_guess_corona',
