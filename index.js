@@ -25,6 +25,9 @@ const now = new Date();
 const daystamp = getDayStamp(now);
 const yesterday = (d => new Date(d.setDate(d.getDate()-1)))(new Date);
 const yestedaystamp = getDayStamp(yesterday);
+const unknownNpasFilename = './unknown-geocoding.csv';
+
+
 const exportUrl = core.getInput('daily_export_json_url');
 const geolocationUrl = core.getInput('geo_locations_csv_url');
 const exportToken = core.getInput('daily_export_json_token');
@@ -66,7 +69,7 @@ try {
     const currentDailyChangesResponse = await httpClient.get(exportUrl + `?token=${exportToken}&date=${daystamp}`);
     const currentDailyChanges = JSON.parse(await currentDailyChangesResponse.readBody());
     const geocoding = await getGeocoding();
-    const unknownNpas = loadCSVFile('./unknown-geocoding.csv');
+    const unknownNpas = loadCSVFile(unknownNpasFilename);
 
     const getLatLong = (locator) => {
       const item = geocoding.find((it) => it[0] === locator);
@@ -159,11 +162,14 @@ try {
     const buildDailyChanges = async () => {
       const changes = [csvHeader];
       currentDailyChanges.forEach(({ locator, daystamp, diagnostics }) => {
-        const row = [daystamp, locator, ...emptyDiagnosticRow];
-        Object.entries(diagnostics).forEach(([diagnosticId, diagnosticCount]) => {
-          row[numberOfMetadataRows + parseInt(diagnosticId, 10)] += diagnosticCount;
-        });
-        changes.push(row);
+        const latlong = getLatLong(locator);
+        if (latlong) {
+          const row = [daystamp, locator, ...latlong, ...emptyDiagnosticRow];
+          Object.entries(diagnostics).forEach(([diagnosticId, diagnosticCount]) => {
+            row[numberOfMetadataRows + parseInt(diagnosticId, 10)] += diagnosticCount;
+          });
+          changes.push(row);
+        }
       });
 
       const dailyChangeCsv = changes.map(it => it.join(',')).join('\n');
@@ -184,7 +190,12 @@ try {
     await buildDailyMergedChanges();
 
     // Update last-update
+    console.log('writing last update');
     fs.writeFileSync('./last-update.txt', `${now.toLocaleDateString()} ${now.toLocaleTimeString()}`, 'utf-8');
+
+    console.log('writing unknown npas');
+    fs.writeFileSync(unknownNpasFilename, toCsv(unknownNpas), 'utf-8');
+
     console.log('Done');
   })();
 } catch (e) {
