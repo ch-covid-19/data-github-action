@@ -329,6 +329,7 @@ try {
     // Update last-update
     console.log('writing last update');
     fs.writeFileSync('./last-update.txt', `${now.toLocaleDateString()} ${now.toLocaleTimeString()}`, 'utf-8');
+    fs.writeFileSync('./last_update.txt', `${now.toLocaleDateString()} ${now.toLocaleTimeString()}`, 'utf-8');
 
     console.log('writing unknown npas');
     fs.writeFileSync(unknownNpasFilename, toCsv(unknownNpas), 'utf-8');
